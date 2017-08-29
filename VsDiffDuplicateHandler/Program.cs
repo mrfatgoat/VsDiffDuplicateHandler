@@ -15,7 +15,7 @@ namespace VsDiffDuplicateHandler
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Expected an XML file, \"good\" base path, and \"staged\" base path.");
+                Console.WriteLine("Expected an XML file and \"good\" base path.");
                 return;
             }
 
