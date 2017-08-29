@@ -24,13 +24,13 @@ namespace VsDiffDuplicateHandler
 
             if (!File.Exists(xmlPath))
             {
-                Console.WriteLine($@"file ""{xmlPath}"" does not exist.");
+                Console.WriteLine($@"File ""{xmlPath}"" does not exist.");
                 return;
             }
 
             if (!Directory.Exists(_goodBasePath))
             {
-                Console.WriteLine($"{nameof(_goodBasePath)} does not exist.");
+                Console.WriteLine("\"Good\" base path does not exist.");
                 return;
             }
 
