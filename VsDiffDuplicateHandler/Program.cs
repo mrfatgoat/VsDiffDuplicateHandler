@@ -48,6 +48,8 @@ namespace VsDiffDuplicateHandler
 
             ProcessDupeFile(xdoc);
 
+            FileSystem.DeleteFile(xmlPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+
             Console.ReadLine();
             return;
         }
