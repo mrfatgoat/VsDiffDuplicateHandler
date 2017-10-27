@@ -15,6 +15,7 @@ namespace VsDiffDuplicateHandler
         {
             if (args.Length < 2)
             {
+                // TODO: Abstract all logging
                 Console.WriteLine("Expected an XML file and \"good\" base path.");
                 return;
             }
@@ -113,7 +114,7 @@ namespace VsDiffDuplicateHandler
 
         #region File Operations
 
-        // TODO: Abstract this functionality
+        // TODO: Abstract file ops
         private static XDocument LoadXml(string xmlPath)
         {
             using (FileStream fs = File.OpenRead(xmlPath))
@@ -142,6 +143,8 @@ namespace VsDiffDuplicateHandler
                 Console.WriteLine($"Exception deleting {file}");
                 Console.WriteLine(ex.Message);
             }
+
+            Console.WriteLine($"DELETED {file}");
         }
 
         private static void MoveFile(string file, string dest)
@@ -155,6 +158,8 @@ namespace VsDiffDuplicateHandler
                 Console.WriteLine($"Exception moving {file}");
                 Console.WriteLine(ex.Message);
             }
+
+            Console.WriteLine($"MOVED {file} to {Path.GetDirectoryName(dest)}");
         }
         
         #endregion
