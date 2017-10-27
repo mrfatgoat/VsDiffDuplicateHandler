@@ -51,15 +51,6 @@ namespace VsDiffDuplicateHandler
             FileSystem.DeleteFile(xmlPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
         }
 
-        private static XDocument LoadXml(string xmlPath)
-        {
-            using (FileStream fs = File.OpenRead(xmlPath))
-            {
-                XDocument xdoc = XDocument.Load(fs);
-                return xdoc;
-            }
-        }
-
         private static void ProcessDupeFile(XDocument xdoc)
         {
             // Get all the duplicate groups
@@ -73,37 +64,65 @@ namespace VsDiffDuplicateHandler
         private static void ProcessGroup(XElement group)
         {
             XElement[] images = group.Descendants("Image").ToArray();
-            IEnumerable<XElement> goodFiles = images.Where(i => IsGoodPath(i.Attribute("FileName").Value));
-            IEnumerable<XElement> stagedFiles = images.Except(goodFiles);
-            IEnumerable<XElement> checkedFiles = images.Where(i => i.Attribute("Checked").Value != "0");
+
+            XElement[] checkedFiles = images
+                .Where(i => i.Attribute("Checked").Value != "0")
+                .ToArray();
+
+            // If there are no checked files, leave everything alone
+            if (!checkedFiles.Any())
+                return;
+
+            XElement[] goodFiles = images
+                .Where(i => IsGoodPath(i.Attribute("FileName").Value))
+                .ToArray();
+            IEnumerable<XElement> stagedFiles = images.Except(goodFiles);            
             IEnumerable<XElement> keepFiles = images.Except(checkedFiles);
 
             // Delete the checked files
             foreach (XElement checkedFile in checkedFiles)
-                FileSystem.DeleteFile(checkedFile.Attribute("FileName").Value, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                DeleteFile(checkedFile.Attribute("FileName").Value);
 
+            // Isolate the files we intend to move
             XElement[] filesToMove = stagedFiles.Intersect(keepFiles).ToArray();
 
-            if (filesToMove.Any())
-            {
-                string destinationDir = goodFiles
-                    .Select(i => Path.GetDirectoryName(i.Attribute("FileName").Value))
-                    .Distinct()
-                    .SingleOrDefault();
+            // If there's nothing to move, we're done
+            if (!filesToMove.Any())
+                return;
 
-                if (!String.IsNullOrWhiteSpace(destinationDir))
-                {
-                    foreach (XElement keeper in filesToMove)
-                    {
-                        // Create the destination directory
-                        string currentPath = keeper.Attribute("FileName").Value;
-                        string destPath = Path.Combine(destinationDir, Path.GetFileName(currentPath));
-                        File.Move(currentPath, destPath);
-                    }
-                }
+            // Figure out where the files are moving to
+            IEnumerable<string> goodDirectories = goodFiles
+                .Select(i => Path.GetDirectoryName(i.Attribute("FileName").Value))
+                .Distinct();
+
+            // If there isn't exacty one destination, we don't know where the files go
+            if (goodDirectories.Count() != 1)
+                return;
+
+            string destinationDir = goodDirectories.Single();
+
+            // Move each file
+            foreach (XElement keeper in filesToMove)
+            {
+                // Build the destination directory
+                string currentPath = keeper.Attribute("FileName").Value;
+                string destPath = Path.Combine(destinationDir, Path.GetFileName(currentPath));
+                MoveFile(currentPath, destPath);
             }
         }
 
+        #region File Operations
+
+        // TODO: Abstract this functionality
+        private static XDocument LoadXml(string xmlPath)
+        {
+            using (FileStream fs = File.OpenRead(xmlPath))
+            {
+                XDocument xdoc = XDocument.Load(fs);
+                return xdoc;
+            }
+        }
+        
         private static bool IsGoodPath(string filePath)
         {
             bool isGood = Path.GetDirectoryName(filePath)
@@ -111,5 +130,33 @@ namespace VsDiffDuplicateHandler
 
             return isGood;
         }
+        
+        private static void DeleteFile(string file)
+        {
+            try
+            {
+                FileSystem.DeleteFile(file, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception deleting {file}");
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static void MoveFile(string file, string dest)
+        {
+            try
+            {
+                File.Move(file, dest);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception moving {file}");
+                Console.WriteLine(ex.Message);
+            }
+        }
+        
+        #endregion
     }
 }
