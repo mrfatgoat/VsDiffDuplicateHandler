@@ -26,6 +26,7 @@ namespace VsDiffDuplicateHandler
             services.AddSingleton<IDuplicateHandlerConfiguration>(config);
             services.AddSingleton<IDuplicateReaderFactory, DuplicateReaderFactory>();
             services.AddSingleton<IDuplicateReader, XmlDuplicateReader>();
+            services.AddSingleton<IDuplicateReader, CsvDuplicateReader>();
             services.AddSingleton<System.IO.Abstractions.IFileSystem, System.IO.Abstractions.FileSystem>();
 
 
