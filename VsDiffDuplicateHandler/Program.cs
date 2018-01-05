@@ -1,39 +1,39 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using VsDiffDuplicateHandler.Configuration;
+using VsDiffDuplicateHandler.Services;
 
 namespace VsDiffDuplicateHandler
 {
     class Program
     {
-        private static string _goodBasePath;
-
         static void Main(string[] args)
         {
-            if (args.Length < 2)
-            {
-                // TODO: Abstract all logging
-                Console.WriteLine("Expected an XML file and \"good\" base path.");
-                return;
-            }
+            // [X] Validate arguments
+            // [X] Create configuration object
+            // [ ] Populate DI container
+            // [ ] Retrieve the duplicate processor
+            // [ ] Process the duplicates
 
-            string xmlPath = args[0];
-            _goodBasePath = args[1];
+            IDuplicateHandlerConfiguration config = AssertValidArguments(args);
 
-            if (!File.Exists(xmlPath))
-            {
-                Console.WriteLine($@"File ""{xmlPath}"" does not exist.");
-                return;
-            }
+            IServiceCollection services = new ServiceCollection();
+            services.AddSingleton<IDuplicateHandlerConfiguration>(config);
+            services.AddSingleton<IDuplicateReaderFactory, DuplicateReaderFactory>();
+            services.AddSingleton<IDuplicateReader, XmlDuplicateReader>();
+            services.AddSingleton<System.IO.Abstractions.IFileSystem, System.IO.Abstractions.FileSystem>();
 
-            if (!Directory.Exists(_goodBasePath))
-            {
-                Console.WriteLine("\"Good\" base path does not exist.");
-                return;
-            }
+
+
+
+            return;
+
+            string dupFilePath;
 
             XDocument xdoc = null;
 
@@ -43,13 +43,13 @@ namespace VsDiffDuplicateHandler
             }
             catch
             {
-                Console.WriteLine($@"Could not read ""{xmlPath}"" as XML.");
+                Console.WriteLine($@"Could not read ""{dupFilePath}"" as XML.");
                 return;
             }
 
             ProcessDupeFile(xdoc);
 
-            FileSystem.DeleteFile(xmlPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+            Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(dupFilePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
         }
 
         private static void ProcessDupeFile(XDocument xdoc)
@@ -126,6 +126,9 @@ namespace VsDiffDuplicateHandler
         
         private static bool IsGoodPath(string filePath)
         {
+            // TEMP
+            string _goodBasePath = String.Empty;
+
             bool isGood = Path.GetDirectoryName(filePath)
                 .StartsWith(_goodBasePath, StringComparison.OrdinalIgnoreCase);
 
@@ -136,7 +139,7 @@ namespace VsDiffDuplicateHandler
         {
             try
             {
-                FileSystem.DeleteFile(file, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(file, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
             }
             catch (Exception ex)
             {
@@ -163,5 +166,37 @@ namespace VsDiffDuplicateHandler
         }
         
         #endregion
+
+        private static IDuplicateHandlerConfiguration AssertValidArguments(string[] args)
+        {
+            if (args.Length < 2)
+            {
+                // TODO: Abstract logging
+                Console.WriteLine("Expected a \"duplicates\" file and \"good\" base path.");
+                throw new ArgumentException();
+            }
+
+            bool dryrun = 
+                args.Length == 3 && 
+                args[2].Equals("--dryrun", StringComparison.OrdinalIgnoreCase);
+
+            return new DuplicateHandlerConfiguration()
+            {
+                DuplicateFilePath = args[0],
+                GoodPath = args[1],
+                DryRun = dryrun
+            };
+
+            // TODO: Abstract file operations
+            //if (!File.Exists(dupFilePath))
+            //{
+            //    Console.WriteLine($@"File ""{dupFilePath}"" does not exist.");
+            //}
+
+            //if (!Directory.Exists(_goodBasePath))
+            //{
+            //    Console.WriteLine("\"Good\" base path does not exist.");
+            //}
+        }
     }
 }

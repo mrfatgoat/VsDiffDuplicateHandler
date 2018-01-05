@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VsDiffDuplicateHandler", "VsDiffDuplicateHandler\VsDiffDuplicateHandler.csproj", "{73295CEE-39FA-41B5-A00F-8B16427DA5D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VsDiffDuplicateHandlerTest", "VsDiffDuplicateHandlerTest\VsDiffDuplicateHandlerTest.csproj", "{10A5C58D-C103-44F5-A093-7DB0979846DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{73295CEE-39FA-41B5-A00F-8B16427DA5D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73295CEE-39FA-41B5-A00F-8B16427DA5D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73295CEE-39FA-41B5-A00F-8B16427DA5D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10A5C58D-C103-44F5-A093-7DB0979846DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10A5C58D-C103-44F5-A093-7DB0979846DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10A5C58D-C103-44F5-A093-7DB0979846DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10A5C58D-C103-44F5-A093-7DB0979846DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E9E85D25-97E8-475F-8858-1CA8B8FD0839}
 	EndGlobalSection
 EndGlobal
