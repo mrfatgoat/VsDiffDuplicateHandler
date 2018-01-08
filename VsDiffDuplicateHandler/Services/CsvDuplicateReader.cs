@@ -1,26 +1,54 @@
-﻿using System;
+﻿using LINQtoCSV;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using VsDiffDuplicateHandler.Configuration;
 using VsDiffDuplicateHandler.Models;
+using System.Linq;
+using System.IO;
 
 namespace VsDiffDuplicateHandler.Services
 {
     public class CsvDuplicateReader : IDuplicateReader
     {
         private readonly IDuplicateHandlerConfiguration _config;
+        private readonly IFileSystem _fileSystem;
 
-        public CsvDuplicateReader(IDuplicateHandlerConfiguration config)
+        public CsvDuplicateReader(IDuplicateHandlerConfiguration config, IFileSystem fileSystem)
         {
             _config = config;
+            _fileSystem = fileSystem;
         }
 
         public bool CanHandle(FileInfoBase fileInfo) => fileInfo.Extension.Equals("csv", StringComparison.CurrentCultureIgnoreCase);
 
         public IEnumerator<DuplicateGroup> GetEnumerator()
         {
-            throw new NotImplementedException();
+            CsvFileDescription csvDescription = new CsvFileDescription()
+            {
+                SeparatorChar = ',',
+                FirstLineHasColumnNames = true
+            };
+
+            CsvContext csvContext = new CsvContext();
+
+            using (StreamReader csvStreamReader = _fileSystem.File.OpenText(_config.DuplicateFilePath))
+            {
+                IEnumerable<DuplicateGroup> dupGroups = csvContext.Read<CsvDuplicateRecord>(csvStreamReader, csvDescription)
+                    .GroupBy(rec => rec.Group)
+                    .Select(recGroup => new DuplicateGroup()
+                    {
+                        Files = recGroup.Select(rec => new GroupFile()
+                        {
+                            FullName = rec.FileName,
+                            Checked = rec.Checked > 0
+                        })
+                    });
+
+                foreach (DuplicateGroup dupGroup in dupGroups)
+                    yield return dupGroup;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();

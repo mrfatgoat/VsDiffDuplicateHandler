@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LINQtoCSV, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LINQtoCSV.1.5.0.0\lib\net35\LINQtoCSV.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
@@ -55,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Configuration\DuplicateHandlerConfiguration.cs" />
     <Compile Include="Configuration\IDuplicateHandlerConfiguration.cs" />
+    <Compile Include="Models\CsvDuplicateRecord.cs" />
     <Compile Include="Models\DuplicateGroup.cs" />
     <Compile Include="Models\GroupFile.cs" />
     <Compile Include="Program.cs" />

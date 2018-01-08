@@ -53,6 +53,7 @@ namespace VsDiffDuplicateHandler.Services
             Assert.Equal(3, uut.Count());
         }
 
+
         [Fact]
         public void GetEnumeratorGetsCorrectFilesInGroup()
         {
@@ -70,12 +71,13 @@ namespace VsDiffDuplicateHandler.Services
                 config: Substitute.For<IDuplicateHandlerConfiguration>(),
                 xmlLoader: xmlLoader);
 
-            // Act
+            // Act & Assert
             DuplicateGroup group = Assert.Single(uut);
             Assert.Equal(2, group.Files.Count());
             GroupFile file1 = Assert.Single(group.Files, f => f.FullName == "file1" && f.Checked == true);
             GroupFile file2 = Assert.Single(group.Files, f => f.FullName == "file2" && f.Checked == false);
         }
+
 
         private XElement ArrangeImage(bool isChecked, string fileName)
         {
@@ -84,6 +86,7 @@ namespace VsDiffDuplicateHandler.Services
             imageElement.SetAttributeValue("FileName", fileName);
             return imageElement;
         }
+
 
         private XElement ArrangeGroup(params XElement[] images)
         {
