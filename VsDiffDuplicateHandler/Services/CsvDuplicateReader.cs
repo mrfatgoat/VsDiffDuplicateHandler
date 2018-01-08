@@ -2,11 +2,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using VsDiffDuplicateHandler.Configuration;
 using VsDiffDuplicateHandler.Models;
-using System.Linq;
-using System.IO;
 
 namespace VsDiffDuplicateHandler.Services
 {
@@ -21,14 +21,15 @@ namespace VsDiffDuplicateHandler.Services
             _fileSystem = fileSystem;
         }
 
-        public bool CanHandle(FileInfoBase fileInfo) => fileInfo.Extension.Equals("csv", StringComparison.CurrentCultureIgnoreCase);
+        public bool CanHandle(FileInfoBase fileInfo) => fileInfo.Extension.Equals(".csv", StringComparison.CurrentCultureIgnoreCase);
 
         public IEnumerator<DuplicateGroup> GetEnumerator()
         {
             CsvFileDescription csvDescription = new CsvFileDescription()
             {
                 SeparatorChar = ',',
-                FirstLineHasColumnNames = true
+                FirstLineHasColumnNames = true,
+                IgnoreUnknownColumns = true
             };
 
             CsvContext csvContext = new CsvContext();

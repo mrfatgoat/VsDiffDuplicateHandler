@@ -19,7 +19,7 @@ namespace VsDiffDuplicateHandler.Services
             _config = config;
         }
 
-        public bool CanHandle(FileInfoBase fileInfo) => fileInfo.Extension.Equals("xml", StringComparison.OrdinalIgnoreCase);
+        public bool CanHandle(FileInfoBase fileInfo) => fileInfo.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase);
 
         public IEnumerator<DuplicateGroup> GetEnumerator()
         {

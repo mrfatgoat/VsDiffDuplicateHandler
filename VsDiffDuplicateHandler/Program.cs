@@ -20,35 +20,46 @@ namespace VsDiffDuplicateHandler
             // [ ] Retrieve the duplicate processor
             // [ ] Process the duplicates
 
-            IDuplicateHandlerConfiguration config = AssertValidArguments(args);
-
             IServiceCollection services = new ServiceCollection();
-            services.AddSingleton<IDuplicateHandlerConfiguration>(config);
+            services.AddSingleton<IDuplicateHandlerConfiguration>(AssertValidArguments(args));
             services.AddSingleton<IDuplicateReaderFactory, DuplicateReaderFactory>();
+            services.AddSingleton<IXmlLoader, XmlLoader>();
             services.AddSingleton<IDuplicateReader, XmlDuplicateReader>();
             services.AddSingleton<IDuplicateReader, CsvDuplicateReader>();
             services.AddSingleton<System.IO.Abstractions.IFileSystem, System.IO.Abstractions.FileSystem>();
+            services.AddSingleton<IDuplicateProcessor, DuplicateProcessor>();
+            services.AddSingleton<IFileModifier>(isp =>
+            {
+                IDuplicateHandlerConfiguration config = isp.GetRequiredService<IDuplicateHandlerConfiguration>();
+                if (config.DryRun)
+                    return new DryRunFileModifier();
+                else
+                    return new FileModifier();
+            });
 
+            IServiceProvider sp = services.BuildServiceProvider();
+            IDuplicateProcessor dupProc = sp.GetRequiredService<IDuplicateProcessor>();
 
+            dupProc.ProcessDuplicates();
 
 
             return;
 
             string dupFilePath;
 
-            XDocument xdoc = null;
+            //XDocument xdoc = null;
 
-            try
-            {
-                xdoc = LoadXml(args[0]);
-            }
-            catch
-            {
-                Console.WriteLine($@"Could not read ""{dupFilePath}"" as XML.");
-                return;
-            }
+            //try
+            //{
+            //    xdoc = LoadXml(args[0]);
+            //}
+            //catch
+            //{
+            //    Console.WriteLine($@"Could not read ""{dupFilePath}"" as XML.");
+            //    return;
+            //}
 
-            ProcessDupeFile(xdoc);
+            //ProcessDupeFile(xdoc);
 
             Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(dupFilePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
         }
@@ -65,76 +76,76 @@ namespace VsDiffDuplicateHandler
 
         private static void ProcessGroup(XElement group)
         {
-            XElement[] images = group.Descendants("Image").ToArray();
+            ////XElement[] images = group.Descendants("Image").ToArray();
 
-            XElement[] checkedFiles = images
-                .Where(i => i.Attribute("Checked").Value != "0")
-                .ToArray();
+            ////XElement[] checkedFiles = images
+            ////    .Where(i => i.Attribute("Checked").Value != "0")
+            ////    .ToArray();
 
-            // If there are no checked files, leave everything alone
-            if (!checkedFiles.Any())
-                return;
+            ////// If there are no checked files, leave everything alone
+            ////if (!checkedFiles.Any())
+            ////    return;
 
-            XElement[] goodFiles = images
-                .Where(i => IsGoodPath(i.Attribute("FileName").Value))
-                .ToArray();
-            IEnumerable<XElement> stagedFiles = images.Except(goodFiles);            
-            IEnumerable<XElement> keepFiles = images.Except(checkedFiles);
+            ////XElement[] goodFiles = images
+            ////    .Where(i => IsGoodPath(i.Attribute("FileName").Value))
+            ////    .ToArray();
+            //IEnumerable<XElement> stagedFiles = images.Except(goodFiles);            
+            //IEnumerable<XElement> keepFiles = images.Except(checkedFiles);
 
-            // Delete the checked files
-            foreach (XElement checkedFile in checkedFiles)
-                DeleteFile(checkedFile.Attribute("FileName").Value);
+            //// Delete the checked files
+            //foreach (XElement checkedFile in checkedFiles)
+            //    DeleteFile(checkedFile.Attribute("FileName").Value);
 
-            // Isolate the files we intend to move
-            XElement[] filesToMove = stagedFiles.Intersect(keepFiles).ToArray();
+            //// Isolate the files we intend to move
+            //XElement[] filesToMove = stagedFiles.Intersect(keepFiles).ToArray();
 
-            // If there's nothing to move, we're done
-            if (!filesToMove.Any())
-                return;
+            //// If there's nothing to move, we're done
+            //if (!filesToMove.Any())
+            //    return;
 
-            // Figure out where the files are moving to
-            IEnumerable<string> goodDirectories = goodFiles
-                .Select(i => Path.GetDirectoryName(i.Attribute("FileName").Value))
-                .Distinct();
+            //// Figure out where the files are moving to
+            //IEnumerable<string> goodDirectories = goodFiles
+            //    .Select(i => Path.GetDirectoryName(i.Attribute("FileName").Value))
+            //    .Distinct();
 
-            // If there isn't exacty one destination, we don't know where the files go
-            if (goodDirectories.Count() != 1)
-                return;
+            //// If there isn't exacty one destination, we don't know where the files go
+            //if (goodDirectories.Count() != 1)
+            //    return;
 
-            string destinationDir = goodDirectories.Single();
+            //string destinationDir = goodDirectories.Single();
 
-            // Move each file
-            foreach (XElement keeper in filesToMove)
-            {
-                // Build the destination directory
-                string currentPath = keeper.Attribute("FileName").Value;
-                string destPath = Path.Combine(destinationDir, Path.GetFileName(currentPath));
-                MoveFile(currentPath, destPath);
-            }
+            //// Move each file
+            //foreach (XElement keeper in filesToMove)
+            //{
+            //    // Build the destination directory
+            //    string currentPath = keeper.Attribute("FileName").Value;
+            //    string destPath = Path.Combine(destinationDir, Path.GetFileName(currentPath));
+            //    MoveFile(currentPath, destPath);
+            //}
         }
 
         #region File Operations
 
         // TODO: Abstract file ops
-        private static XDocument LoadXml(string xmlPath)
-        {
-            using (FileStream fs = File.OpenRead(xmlPath))
-            {
-                XDocument xdoc = XDocument.Load(fs);
-                return xdoc;
-            }
-        }
+        //private static XDocument LoadXml(string xmlPath)
+        //{
+        //    using (FileStream fs = File.OpenRead(xmlPath))
+        //    {
+        //        XDocument xdoc = XDocument.Load(fs);
+        //        return xdoc;
+        //    }
+        //}
         
-        private static bool IsGoodPath(string filePath)
-        {
-            // TEMP
-            string _goodBasePath = String.Empty;
+        //private static bool IsGoodPath(string filePath)
+        //{
+        //    // TEMP
+        //    string _goodBasePath = String.Empty;
 
-            bool isGood = Path.GetDirectoryName(filePath)
-                .StartsWith(_goodBasePath, StringComparison.OrdinalIgnoreCase);
+        //    bool isGood = Path.GetDirectoryName(filePath)
+        //        .StartsWith(_goodBasePath, StringComparison.OrdinalIgnoreCase);
 
-            return isGood;
-        }
+        //    return isGood;
+        //}
         
         private static void DeleteFile(string file)
         {

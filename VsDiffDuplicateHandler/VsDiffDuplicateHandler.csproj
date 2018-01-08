@@ -64,9 +64,14 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CsvDuplicateReader.cs" />
+    <Compile Include="Services\DryRunFileModifier.cs" />
+    <Compile Include="Services\DuplicateProcessor.cs" />
     <Compile Include="Services\DuplicateReaderFactory.cs" />
+    <Compile Include="Services\FileModifier.cs" />
+    <Compile Include="Services\IDuplicateProcessor.cs" />
     <Compile Include="Services\IDuplicateReader.cs" />
     <Compile Include="Services\IDuplicateReaderFactory.cs" />
+    <Compile Include="Services\IFileModifier.cs" />
     <Compile Include="Services\IXmlLoader.cs" />
     <Compile Include="Services\XmlDuplicateReader.cs" />
     <Compile Include="Services\XmlLoader.cs" />

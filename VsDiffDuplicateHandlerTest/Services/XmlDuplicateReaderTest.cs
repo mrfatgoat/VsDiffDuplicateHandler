@@ -11,9 +11,9 @@ namespace VsDiffDuplicateHandler.Services
     public class XmlDuplicateReaderTest
     {
         [Theory]
-        [InlineData("xml", true)]
-        [InlineData("XML", true)]
-        [InlineData("abc", false)]
+        [InlineData(".xml", true)]
+        [InlineData(".XML", true)]
+        [InlineData(".abc", false)]
         public void CanHandleReturnsTrueForCorrectFileExtensionsOnly(string fileExtension, bool shouldHandle)
         {
             // Arrange

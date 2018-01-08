@@ -1,5 +1,4 @@
 ﻿using NSubstitute;
-using System;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
@@ -13,9 +12,9 @@ namespace VsDiffDuplicateHandlerTest.Services
     public class CsvDuplicateReaderTest
     {
         [Theory]
-        [InlineData("csv", true)]
-        [InlineData("CSV", true)]
-        [InlineData("xyz", false)]
+        [InlineData(".csv", true)]
+        [InlineData(".CSV", true)]
+        [InlineData(".xyz", false)]
         public void CanHandleReturnsTrueForCorrectFileExtensionsOnly(string fileExtension, bool shouldHandle)
         {
             // Arrange
