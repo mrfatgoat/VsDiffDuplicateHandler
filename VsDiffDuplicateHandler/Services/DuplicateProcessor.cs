@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VsDiffDuplicateHandler.Configuration;
 using VsDiffDuplicateHandler.Models;
 
@@ -15,6 +13,7 @@ namespace VsDiffDuplicateHandler.Services
         private readonly IFileModifier _fileModifier;
         private readonly IDuplicateHandlerConfiguration _config;
         private readonly IFileSystem _fileSystem;
+
 
         public DuplicateProcessor(
             IDuplicateReaderFactory readerFactory, 

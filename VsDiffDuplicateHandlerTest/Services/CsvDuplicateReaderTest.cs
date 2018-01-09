@@ -94,6 +94,7 @@ namespace VsDiffDuplicateHandlerTest.Services
             Assert.Equal(isChecked, file.Checked);
         }
 
+
         [Fact]
         public void CallingFilesPropertyAlwaysReturnsSameInstance()
         {
@@ -128,6 +129,7 @@ namespace VsDiffDuplicateHandlerTest.Services
             ms.Position = 0;
             return new StreamReader(ms);
         }
+
 
         private IFileSystem ArrangeFileSystemForCsvData(params CsvDuplicateRecord[] csvRecords)
         {

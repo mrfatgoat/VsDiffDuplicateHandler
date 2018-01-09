@@ -15,13 +15,18 @@ namespace VsDiffDuplicateHandler.Services
         private readonly IDuplicateHandlerConfiguration _config;
         private readonly IFileSystem _fileSystem;
 
+
         public CsvDuplicateReader(IDuplicateHandlerConfiguration config, IFileSystem fileSystem)
         {
             _config = config;
             _fileSystem = fileSystem;
         }
 
+
         public bool CanHandle(FileInfoBase fileInfo) => fileInfo.Extension.Equals(".csv", StringComparison.CurrentCultureIgnoreCase);
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
 
         public IEnumerator<DuplicateGroup> GetEnumerator()
         {
@@ -51,7 +56,5 @@ namespace VsDiffDuplicateHandler.Services
                     yield return dupGroup;
             }
         }
-
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }

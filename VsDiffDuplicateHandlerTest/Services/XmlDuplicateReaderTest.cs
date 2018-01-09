@@ -79,6 +79,7 @@ namespace VsDiffDuplicateHandler.Services
             GroupFile file2 = Assert.Single(group.Files, f => f.FullName == "file2" && f.Checked == false);
         }
 
+
         [Fact]
         public void CallingFilesPropertyAlwaysReturnsSameInstance()
         {

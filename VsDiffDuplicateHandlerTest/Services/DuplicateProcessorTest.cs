@@ -89,6 +89,7 @@ namespace VsDiffDuplicateHandlerTest.Services
             fileModifier.Received(1).Move(stagedFile2, config.GoodPath);
         }
 
+
         [Fact]
         public void StagedFileIsNotMovedIfMultipleGoodPathsFound()
         {
@@ -146,6 +147,7 @@ namespace VsDiffDuplicateHandlerTest.Services
                 fileModifier: fileModifier ?? Substitute.For<IFileModifier>());
         }
 
+
         private IDuplicateReaderFactory ArrangeReaderFactoryForGroups(params DuplicateGroup[] groups)
         {
             IDuplicateReader reader = Substitute.For<IDuplicateReader>();
@@ -156,6 +158,7 @@ namespace VsDiffDuplicateHandlerTest.Services
 
             return readerFactory;
         }
+
 
         private DuplicateGroup ArrangeGroup(params GroupFile[] files)
         {

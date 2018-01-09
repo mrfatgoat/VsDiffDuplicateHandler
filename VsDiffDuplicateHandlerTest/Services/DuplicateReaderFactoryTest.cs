@@ -38,6 +38,7 @@ namespace VsDiffDuplicateHandlerTest.Services
             Assert.Same(correctReader, selectedReader);
         }
 
+
         [Fact]
         public void CreateReaderThrowsIfNoReadersCanHandleFile()
         {

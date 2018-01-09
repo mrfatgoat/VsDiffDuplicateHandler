@@ -12,6 +12,7 @@ namespace VsDiffDuplicateHandler.Services
         private readonly IEnumerable<IDuplicateReader> _readers;
         private readonly IFileSystem _fileSystem;
 
+
         public DuplicateReaderFactory(
             IDuplicateHandlerConfiguration config, 
             IEnumerable<IDuplicateReader> readers,
@@ -21,6 +22,7 @@ namespace VsDiffDuplicateHandler.Services
             _readers = readers;
             _fileSystem = fileSystem;
         }
+
 
         public IDuplicateReader CreateReader()
         {

@@ -13,13 +13,18 @@ namespace VsDiffDuplicateHandler.Services
         private readonly IXmlLoader _xmlLoader;
         private readonly IDuplicateHandlerConfiguration _config;
 
+
         public XmlDuplicateReader(IDuplicateHandlerConfiguration config, IXmlLoader xmlLoader)
         {
             _xmlLoader = xmlLoader;
             _config = config;
         }
 
+
         public bool CanHandle(FileInfoBase fileInfo) => fileInfo.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase);
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
 
         public IEnumerator<DuplicateGroup> GetEnumerator()
         {
@@ -50,7 +55,5 @@ namespace VsDiffDuplicateHandler.Services
                 yield return duplicateGroup;
             }
         }
-
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }

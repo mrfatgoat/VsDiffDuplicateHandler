@@ -13,12 +13,6 @@ namespace VsDiffDuplicateHandler
     {
         static void Main(string[] args)
         {
-            // [X] Validate arguments
-            // [X] Create configuration object
-            // [ ] Populate DI container
-            // [ ] Retrieve the duplicate processor
-            // [ ] Process the duplicates
-
             IServiceCollection services = new ServiceCollection();
             services.AddSingleton<IDuplicateHandlerConfiguration>(AssertValidArguments(args));
             services.AddSingleton<IDuplicateReaderFactory, DuplicateReaderFactory>();
@@ -42,15 +36,6 @@ namespace VsDiffDuplicateHandler
             dupProc.ProcessDuplicates();
         }
 
-        private static void ProcessDupeFile(XDocument xdoc)
-        {
-            // Get all the duplicate groups
-            IEnumerable<XElement> groups = xdoc.Descendants("Group");
-
-            // Process each group
-            foreach (XElement group in groups)
-                ProcessGroup(group);
-        }
 
         #region File Operations
         
