@@ -1,4 +1,5 @@
 ﻿using NSubstitute;
+using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Xml.Linq;
@@ -61,8 +62,8 @@ namespace VsDiffDuplicateHandler.Services
             XDocument xdoc = new XDocument(
                 new XElement("root",
                     this.ArrangeGroup(
-                        this.ArrangeImage(true, "file1"),
-                        this.ArrangeImage(false, "file2"))));
+                        this.ArrangeFile(true, "file1"),
+                        this.ArrangeFile(false, "file2"))));
 
             IXmlLoader xmlLoader = Substitute.For<IXmlLoader>();
             xmlLoader.Load(Arg.Any<string>()).Returns(xdoc);
@@ -78,8 +79,32 @@ namespace VsDiffDuplicateHandler.Services
             GroupFile file2 = Assert.Single(group.Files, f => f.FullName == "file2" && f.Checked == false);
         }
 
+        [Fact]
+        public void CallingFilesPropertyAlwaysReturnsSameInstance()
+        {
+            // Arrange
+            XDocument xdoc = new XDocument(
+                new XElement("root",
+                this.ArrangeGroup(
+                    this.ArrangeFile(false, "file1"))));
 
-        private XElement ArrangeImage(bool isChecked, string fileName)
+            IXmlLoader xmlLoader = Substitute.For<IXmlLoader>();
+                xmlLoader.Load(Arg.Any<string>()).Returns(xdoc);
+
+            XmlDuplicateReader uut = new XmlDuplicateReader(
+                config: Substitute.For<IDuplicateHandlerConfiguration>(),
+                xmlLoader: xmlLoader);
+            
+            // Act
+            DuplicateGroup group = uut.Single();
+            IEnumerable<GroupFile> intersection = group.Files.Intersect(group.Files);
+
+            // Assert
+            Assert.Single(intersection);
+        }
+
+
+        private XElement ArrangeFile(bool isChecked, string fileName)
         {
             XElement imageElement = new XElement("Image");
             imageElement.SetAttributeValue("Checked", isChecked ? "1" : "0");

@@ -44,7 +44,7 @@ namespace VsDiffDuplicateHandler.Services
                         {
                             FullName = rec.FileName,
                             Checked = rec.Checked > 0
-                        })
+                        }).ToList()
                     });
 
                 foreach (DuplicateGroup dupGroup in dupGroups)

@@ -1,4 +1,5 @@
 ﻿using NSubstitute;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
@@ -91,6 +92,25 @@ namespace VsDiffDuplicateHandlerTest.Services
             DuplicateGroup group = Assert.Single(uut);
             GroupFile file = Assert.Single(group.Files);
             Assert.Equal(isChecked, file.Checked);
+        }
+
+        [Fact]
+        public void CallingFilesPropertyAlwaysReturnsSameInstance()
+        {
+            // Arrange
+            IFileSystem fs = this.ArrangeFileSystemForCsvData(
+                new CsvDuplicateRecord() { Group = 1, FileName = "file1", Checked = 0 });
+
+            CsvDuplicateReader uut = new CsvDuplicateReader(
+                config: Substitute.For<IDuplicateHandlerConfiguration>(),
+                fileSystem: fs);
+
+            // Act
+            DuplicateGroup group = uut.Single();
+            IEnumerable<GroupFile> intersection = group.Files.Intersect(group.Files);
+
+            // Assert
+            Assert.Single(intersection);
         }
 
 

@@ -42,7 +42,7 @@ namespace VsDiffDuplicateHandler.Services
                     continue;
 
                 GroupFile[] goodFiles = group.Files
-                    .Where(f => IsGoodPath(f.FullName))
+                    .Where(f => IsGoodPath(f))
                     .ToArray();
 
                 IEnumerable<GroupFile> stagedFiles = group.Files.Except(goodFiles);
@@ -80,9 +80,10 @@ namespace VsDiffDuplicateHandler.Services
             }
         }
 
-        private bool IsGoodPath(string filePath)
+
+        private bool IsGoodPath(GroupFile file)
         {
-            bool isGood = _fileSystem.Path.GetDirectoryName(filePath)
+            bool isGood = _fileSystem.Path.GetDirectoryName(file.FullName)
                 .StartsWith(_config.GoodPath, StringComparison.OrdinalIgnoreCase);
 
             return isGood;
