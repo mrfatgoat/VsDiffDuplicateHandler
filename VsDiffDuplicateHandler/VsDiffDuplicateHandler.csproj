@@ -92,10 +92,12 @@
     <Compile Include="Services\DuplicateProcessor.cs" />
     <Compile Include="Services\DuplicateReaderFactory.cs" />
     <Compile Include="Services\FileModifier.cs" />
+    <Compile Include="Services\FileOperationsImplementation.cs" />
     <Compile Include="Services\Interfaces\IDuplicateProcessor.cs" />
     <Compile Include="Services\Interfaces\IDuplicateReader.cs" />
     <Compile Include="Services\Interfaces\IDuplicateReaderFactory.cs" />
     <Compile Include="Services\Interfaces\IFileModifier.cs" />
+    <Compile Include="Services\Interfaces\IFileOperationsAbstraction.cs" />
     <Compile Include="Services\Interfaces\IXmlLoader.cs" />
     <Compile Include="Services\XmlDuplicateReader.cs" />
     <Compile Include="Services\XmlLoader.cs" />

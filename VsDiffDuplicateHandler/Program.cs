@@ -31,6 +31,7 @@ namespace VsDiffDuplicateHandler
                 .AddSingleton<IDuplicateReader, CsvDuplicateReader>()
                 .AddSingleton<IFileSystem, FileSystem>()
                 .AddSingleton<IDuplicateProcessor, DuplicateProcessor>()
+                .AddSingleton<IFileOperationsAbstraction, FileOperationsImplementation>()
                 .AddSingleton<DryRunFileModifier>()
                 .AddSingleton<FileModifier>()
                 .AddSingleton<IFileModifier>(isp =>

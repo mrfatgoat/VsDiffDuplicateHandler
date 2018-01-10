@@ -1,22 +1,20 @@
 ﻿using Microsoft.Extensions.Logging;
-using VBIO = Microsoft.VisualBasic.FileIO;
 using System;
 using VsDiffDuplicateHandler.Models;
 using VsDiffDuplicateHandler.Services.Interfaces;
-using System.IO.Abstractions;
 
 namespace VsDiffDuplicateHandler.Services
 {
     public class FileModifier : IFileModifier
     {
         private readonly ILogger<FileModifier> _logger;
-        private readonly IFileSystem _fileSystem;
+        private readonly IFileOperationsAbstraction _fileOps;
 
 
-        public FileModifier(ILogger<FileModifier> logger, IFileSystem fileSystem)
+        public FileModifier(ILogger<FileModifier> logger, IFileOperationsAbstraction fileOps)
         {
             _logger = logger;
-            _fileSystem = fileSystem;
+            _fileOps = fileOps;
         }
 
 
@@ -24,14 +22,13 @@ namespace VsDiffDuplicateHandler.Services
         {
             try
             {
-                VBIO.FileSystem.DeleteFile(groupFile.FullName, VBIO.UIOption.OnlyErrorDialogs, VBIO.RecycleOption.SendToRecycleBin);
+                _fileOps.Delete(groupFile.FullName);
+                _logger.LogInformation($"DELETED {groupFile.FullName} to the recycle bin.");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"EXCEPTION DELETING {groupFile.FullName}.");
             }
-
-            _logger.LogInformation($"DELETED {groupFile.FullName} to the recycle bin.");
         }
 
 
@@ -39,14 +36,13 @@ namespace VsDiffDuplicateHandler.Services
         {
             try
             {
-                _fileSystem.File.Move(groupFile.FullName, dest);
+                _fileOps.Move(groupFile.FullName, dest);
+                _logger.LogInformation($"MOVED {groupFile.FullName} to {dest}.");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Exception moving {groupFile.FullName}");
             }
-
-            _logger.LogInformation($"MOVED {groupFile.FullName} to {dest}.");
         }
     }
 }
