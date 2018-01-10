@@ -22,7 +22,7 @@ namespace VsDiffDuplicateHandler.Services
         {
             try
             {
-                _fileOps.Delete(groupFile.FullName);
+                _fileOps.DeleteFile(groupFile.FullName);
                 _logger.LogInformation($"DELETED {groupFile.FullName} to the recycle bin.");
             }
             catch (Exception ex)
@@ -36,7 +36,7 @@ namespace VsDiffDuplicateHandler.Services
         {
             try
             {
-                _fileOps.Move(groupFile.FullName, dest);
+                _fileOps.MoveFile(groupFile.FullName, dest);
                 _logger.LogInformation($"MOVED {groupFile.FullName} to {dest}.");
             }
             catch (Exception ex)

@@ -26,12 +26,11 @@ namespace VsDiffDuplicateHandler
                     return config;
                 })
                 .AddSingleton<IDuplicateReaderFactory, DuplicateReaderFactory>()
-                .AddSingleton<IXmlLoader, XmlLoader>()
+                .AddSingleton<IFileOperationsAbstraction, FileOperationsImplementation>()
                 .AddSingleton<IDuplicateReader, XmlDuplicateReader>()
                 .AddSingleton<IDuplicateReader, CsvDuplicateReader>()
                 .AddSingleton<IFileSystem, FileSystem>()
                 .AddSingleton<IDuplicateProcessor, DuplicateProcessor>()
-                .AddSingleton<IFileOperationsAbstraction, FileOperationsImplementation>()
                 .AddSingleton<DryRunFileModifier>()
                 .AddSingleton<FileModifier>()
                 .AddSingleton<IFileModifier>(isp =>

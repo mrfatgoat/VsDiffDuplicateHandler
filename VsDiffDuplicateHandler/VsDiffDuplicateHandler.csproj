@@ -98,9 +98,7 @@
     <Compile Include="Services\Interfaces\IDuplicateReaderFactory.cs" />
     <Compile Include="Services\Interfaces\IFileModifier.cs" />
     <Compile Include="Services\Interfaces\IFileOperationsAbstraction.cs" />
-    <Compile Include="Services\Interfaces\IXmlLoader.cs" />
     <Compile Include="Services\XmlDuplicateReader.cs" />
-    <Compile Include="Services\XmlLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -39,7 +39,7 @@ namespace VsDiffDuplicateHandlerTest.Services
             GroupFile file = new GroupFile();
             ILogger<FileModifier> logger = Substitute.For<ILogger<FileModifier>>();
             IFileOperationsAbstraction ops = Substitute.For<IFileOperationsAbstraction>();
-            ops.When((x) => x.Delete(Arg.Any<string>()))
+            ops.When((x) => x.DeleteFile(Arg.Any<string>()))
                 .Do((callInfo) => throw new Exception());
 
             FileModifier uut = this.FileModifierWithDefaultMocks(
@@ -84,7 +84,7 @@ namespace VsDiffDuplicateHandlerTest.Services
             GroupFile file = new GroupFile();
             ILogger<FileModifier> logger = Substitute.For<ILogger<FileModifier>>();
             IFileOperationsAbstraction ops = Substitute.For<IFileOperationsAbstraction>();
-            ops.When((x) => x.Move(Arg.Any<string>(), Arg.Any<string>()))
+            ops.When((x) => x.MoveFile(Arg.Any<string>(), Arg.Any<string>()))
                 .Do((callInfo) => throw new Exception());
 
             FileModifier uut = this.FileModifierWithDefaultMocks(

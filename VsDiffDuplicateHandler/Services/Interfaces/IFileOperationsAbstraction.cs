@@ -1,8 +1,11 @@
-﻿namespace VsDiffDuplicateHandler.Services.Interfaces
+﻿using System.Xml.Linq;
+
+namespace VsDiffDuplicateHandler.Services.Interfaces
 {
     public interface IFileOperationsAbstraction
     {
-        void Delete(string filePath);
-        void Move(string filePath, string destFolder);
+        void DeleteFile(string filePath);
+        void MoveFile(string filePath, string destFolder);
+        XDocument LoadXml(string filePath);
     }
 }

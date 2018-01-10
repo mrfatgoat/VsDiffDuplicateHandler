@@ -42,11 +42,11 @@ namespace VsDiffDuplicateHandler.Services
                     this.ArrangeGroup(),
                     this.ArrangeGroup()));
 
-            IXmlLoader xmlLoader = Substitute.For<IXmlLoader>();
-            xmlLoader.Load(Arg.Any<string>()).Returns(xdoc);
+            IFileOperationsAbstraction fileOps = Substitute.For<IFileOperationsAbstraction>();
+            fileOps.LoadXml(Arg.Any<string>()).Returns(xdoc);
 
             XmlDuplicateReader uut = this.XmlDuplicateReaderWithDefaultMocks(
-                xmlLoader: xmlLoader);
+                fileOps: fileOps);
 
             // Act & Assert
             Assert.Equal(3, uut.Count());
@@ -63,11 +63,11 @@ namespace VsDiffDuplicateHandler.Services
                         this.ArrangeFile(true, "file1"),
                         this.ArrangeFile(false, "file2"))));
 
-            IXmlLoader xmlLoader = Substitute.For<IXmlLoader>();
-            xmlLoader.Load(Arg.Any<string>()).Returns(xdoc);
+            IFileOperationsAbstraction fileOps = Substitute.For<IFileOperationsAbstraction>();
+            fileOps.LoadXml(Arg.Any<string>()).Returns(xdoc);
 
             XmlDuplicateReader uut = this.XmlDuplicateReaderWithDefaultMocks(
-                xmlLoader: xmlLoader);
+                fileOps: fileOps);
 
             // Act & Assert
             DuplicateGroup group = Assert.Single(uut);
@@ -86,11 +86,11 @@ namespace VsDiffDuplicateHandler.Services
                 this.ArrangeGroup(
                     this.ArrangeFile(false, "file1"))));
 
-            IXmlLoader xmlLoader = Substitute.For<IXmlLoader>();
-                xmlLoader.Load(Arg.Any<string>()).Returns(xdoc);
+            IFileOperationsAbstraction fileOps = Substitute.For<IFileOperationsAbstraction>();
+                fileOps.LoadXml(Arg.Any<string>()).Returns(xdoc);
 
             XmlDuplicateReader uut = this.XmlDuplicateReaderWithDefaultMocks(
-                xmlLoader: xmlLoader);
+                fileOps: fileOps);
             
             // Act
             DuplicateGroup group = uut.Single();
@@ -105,11 +105,11 @@ namespace VsDiffDuplicateHandler.Services
 
         private XmlDuplicateReader XmlDuplicateReaderWithDefaultMocks(
             IDuplicateHandlerConfiguration config = null,
-            IXmlLoader xmlLoader = null)
+            IFileOperationsAbstraction fileOps = null)
         {
             return new XmlDuplicateReader(
                 config: config ?? Substitute.For<IDuplicateHandlerConfiguration>(),
-                xmlLoader: xmlLoader ?? Substitute.For<IXmlLoader>());
+                fileOps: fileOps ?? Substitute.For<IFileOperationsAbstraction>());
         }
 
 

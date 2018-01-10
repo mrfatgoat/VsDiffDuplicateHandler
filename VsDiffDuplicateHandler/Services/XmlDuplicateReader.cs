@@ -11,13 +11,13 @@ namespace VsDiffDuplicateHandler.Services
 {
     public class XmlDuplicateReader : IDuplicateReader
     {
-        private readonly IXmlLoader _xmlLoader;
+        private readonly IFileOperationsAbstraction _fileOps;
         private readonly IDuplicateHandlerConfiguration _config;
 
 
-        public XmlDuplicateReader(IDuplicateHandlerConfiguration config, IXmlLoader xmlLoader)
+        public XmlDuplicateReader(IDuplicateHandlerConfiguration config, IFileOperationsAbstraction fileOps)
         {
-            _xmlLoader = xmlLoader;
+            _fileOps = fileOps;
             _config = config;
         }
 
@@ -29,7 +29,7 @@ namespace VsDiffDuplicateHandler.Services
 
         public IEnumerator<DuplicateGroup> GetEnumerator()
         {
-            XDocument xdoc = _xmlLoader.Load(_config.DuplicateFilePath);
+            XDocument xdoc = _fileOps.LoadXml(_config.DuplicateFilePath);
 
             // Get all the duplicate groups
             IEnumerable<XElement> xmlGroups = xdoc.Descendants("Group");
