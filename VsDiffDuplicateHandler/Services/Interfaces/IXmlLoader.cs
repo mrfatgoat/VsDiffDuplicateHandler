@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace VsDiffDuplicateHandler.Services
+namespace VsDiffDuplicateHandler.Services.Interfaces
 {
     public interface IXmlLoader
     {

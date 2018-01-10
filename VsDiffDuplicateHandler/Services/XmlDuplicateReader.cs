@@ -5,6 +5,7 @@ using System.IO.Abstractions;
 using System.Xml.Linq;
 using VsDiffDuplicateHandler.Configuration;
 using VsDiffDuplicateHandler.Models;
+using VsDiffDuplicateHandler.Services.Interfaces;
 
 namespace VsDiffDuplicateHandler.Services
 {

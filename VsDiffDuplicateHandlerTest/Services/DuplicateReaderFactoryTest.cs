@@ -3,6 +3,7 @@ using System;
 using System.IO.Abstractions;
 using VsDiffDuplicateHandler.Configuration;
 using VsDiffDuplicateHandler.Services;
+using VsDiffDuplicateHandler.Services.Interfaces;
 using Xunit;
 
 namespace VsDiffDuplicateHandlerTest.Services

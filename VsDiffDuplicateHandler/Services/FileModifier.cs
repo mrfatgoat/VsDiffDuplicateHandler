@@ -1,5 +1,6 @@
 ﻿using System;
 using VsDiffDuplicateHandler.Models;
+using VsDiffDuplicateHandler.Services.Interfaces;
 
 namespace VsDiffDuplicateHandler.Services
 {

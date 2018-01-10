@@ -2,7 +2,7 @@
 using System.IO.Abstractions;
 using VsDiffDuplicateHandler.Models;
 
-namespace VsDiffDuplicateHandler.Services
+namespace VsDiffDuplicateHandler.Services.Interfaces
 {
     public interface IDuplicateReader : IEnumerable<DuplicateGroup>
     {

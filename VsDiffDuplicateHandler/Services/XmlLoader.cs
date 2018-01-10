@@ -1,4 +1,5 @@
 ﻿using System.Xml.Linq;
+using VsDiffDuplicateHandler.Services.Interfaces;
 
 namespace VsDiffDuplicateHandler.Services
 {

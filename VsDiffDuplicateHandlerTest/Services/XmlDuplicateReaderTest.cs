@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using VsDiffDuplicateHandler.Configuration;
 using VsDiffDuplicateHandler.Models;
+using VsDiffDuplicateHandler.Services.Interfaces;
 using Xunit;
 
 namespace VsDiffDuplicateHandler.Services

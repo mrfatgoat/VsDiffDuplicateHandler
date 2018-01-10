@@ -1,4 +1,4 @@
-﻿namespace VsDiffDuplicateHandler.Services
+﻿namespace VsDiffDuplicateHandler.Services.Interfaces
 {
     public interface IDuplicateProcessor
     {

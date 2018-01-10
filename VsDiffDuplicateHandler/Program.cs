@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic.FileIO;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Xml.Linq;
 using VsDiffDuplicateHandler.Configuration;
 using VsDiffDuplicateHandler.Services;
+using VsDiffDuplicateHandler.Services.Interfaces;
 
 namespace VsDiffDuplicateHandler
 {
