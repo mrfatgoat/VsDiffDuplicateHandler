@@ -14,6 +14,7 @@ namespace VsDiffDuplicateHandler.Services
             _logger = logger;
         }
 
+
         public void Delete(GroupFile groupFile)
         {
             _logger.LogInformation($"WOULD DELETE: {groupFile.FullName}");

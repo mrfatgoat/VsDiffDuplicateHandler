@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic.FileIO;
 using System;
-using System.IO;
+using System.IO.Abstractions;
 using VsDiffDuplicateHandler.Configuration;
 using VsDiffDuplicateHandler.Services;
 using VsDiffDuplicateHandler.Services.Interfaces;
@@ -13,78 +12,43 @@ namespace VsDiffDuplicateHandler
     {
         static void Main(string[] args)
         {
-            IServiceCollection services = new ServiceCollection();
-            services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder
-                    .AddConsole()
-                    .AddDebug();
-            });
-            services.AddSingleton<IDuplicateHandlerConfiguration>(isp =>
-            {
-                ILogger<Program> logger = isp.GetRequiredService<ILogger<Program>>();
-                DuplicateHandlerConfiguration config = AssertValidArguments(args, logger);
-                return config;
-            });
-            services.AddSingleton<IDuplicateReaderFactory, DuplicateReaderFactory>();
-            services.AddSingleton<IXmlLoader, XmlLoader>();
-            services.AddSingleton<IDuplicateReader, XmlDuplicateReader>();
-            services.AddSingleton<IDuplicateReader, CsvDuplicateReader>();
-            services.AddSingleton<System.IO.Abstractions.IFileSystem, System.IO.Abstractions.FileSystem>();
-            services.AddSingleton<IDuplicateProcessor, DuplicateProcessor>();
-            services.AddSingleton<DryRunFileModifier>();
-            services.AddSingleton<FileModifier>();
-            services.AddSingleton<IFileModifier>(isp =>
-            {
-                IDuplicateHandlerConfiguration config = isp.GetRequiredService<IDuplicateHandlerConfiguration>();
-                if (config.DryRun)
-                    return isp.GetRequiredService<DryRunFileModifier>();
-                else
-                    return isp.GetRequiredService<FileModifier>();
-            });
+            IServiceProvider serviceProvider = new ServiceCollection()
+                .AddLogging(loggingBuilder =>
+                {
+                    loggingBuilder
+                        .AddConsole()
+                        .AddDebug();
+                })
+                .AddSingleton<IDuplicateHandlerConfiguration>(isp =>
+                {
+                    ILogger<Program> logger = isp.GetRequiredService<ILogger<Program>>();
+                    DuplicateHandlerConfiguration config = AssertValidArguments(args, logger);
+                    return config;
+                })
+                .AddSingleton<IDuplicateReaderFactory, DuplicateReaderFactory>()
+                .AddSingleton<IXmlLoader, XmlLoader>()
+                .AddSingleton<IDuplicateReader, XmlDuplicateReader>()
+                .AddSingleton<IDuplicateReader, CsvDuplicateReader>()
+                .AddSingleton<IFileSystem, FileSystem>()
+                .AddSingleton<IDuplicateProcessor, DuplicateProcessor>()
+                .AddSingleton<DryRunFileModifier>()
+                .AddSingleton<FileModifier>()
+                .AddSingleton<IFileModifier>(isp =>
+                {
+                    IDuplicateHandlerConfiguration config = isp.GetRequiredService<IDuplicateHandlerConfiguration>();
+                    if (config.DryRun)
+                        return isp.GetRequiredService<DryRunFileModifier>();
+                    else
+                        return isp.GetRequiredService<FileModifier>();
+                })
+                .BuildServiceProvider();
 
-            IServiceProvider sp = services.BuildServiceProvider();
-            IDuplicateProcessor dupProc = sp.GetRequiredService<IDuplicateProcessor>();
-
+            IDuplicateProcessor dupProc = serviceProvider.GetRequiredService<IDuplicateProcessor>();
             dupProc.ProcessDuplicates();
 
             return;
         }
 
-
-        #region File Operations
-
-        private static void DeleteFile(string file)
-        {
-            try
-            {
-                Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(file, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception deleting {file}");
-                Console.WriteLine(ex.Message);
-            }
-
-            Console.WriteLine($"DELETED {file}");
-        }
-
-        private static void MoveFile(string file, string dest)
-        {
-            try
-            {
-                File.Move(file, dest);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception moving {file}");
-                Console.WriteLine(ex.Message);
-            }
-
-            Console.WriteLine($"MOVED {file} to {Path.GetDirectoryName(dest)}");
-        }
-
-        #endregion
 
         private static DuplicateHandlerConfiguration AssertValidArguments(string[] args, ILogger<Program> logger)
         {
