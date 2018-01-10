@@ -22,9 +22,7 @@ namespace VsDiffDuplicateHandler.Services
             FileInfoBase fileInfo = Substitute.For<FileInfoBase>();
             fileInfo.Extension.Returns(fileExtension);
 
-            XmlDuplicateReader uut = new XmlDuplicateReader(
-                config: Substitute.For<IDuplicateHandlerConfiguration>(),
-                xmlLoader: Substitute.For<IXmlLoader>());
+            XmlDuplicateReader uut = this.XmlDuplicateReaderWithDefaultMocks();
 
             // Act
             bool canHandle = uut.CanHandle(fileInfo);
@@ -47,8 +45,7 @@ namespace VsDiffDuplicateHandler.Services
             IXmlLoader xmlLoader = Substitute.For<IXmlLoader>();
             xmlLoader.Load(Arg.Any<string>()).Returns(xdoc);
 
-            XmlDuplicateReader uut = new XmlDuplicateReader(
-                config: Substitute.For<IDuplicateHandlerConfiguration>(),
+            XmlDuplicateReader uut = this.XmlDuplicateReaderWithDefaultMocks(
                 xmlLoader: xmlLoader);
 
             // Act & Assert
@@ -69,8 +66,7 @@ namespace VsDiffDuplicateHandler.Services
             IXmlLoader xmlLoader = Substitute.For<IXmlLoader>();
             xmlLoader.Load(Arg.Any<string>()).Returns(xdoc);
 
-            XmlDuplicateReader uut = new XmlDuplicateReader(
-                config: Substitute.For<IDuplicateHandlerConfiguration>(),
+            XmlDuplicateReader uut = this.XmlDuplicateReaderWithDefaultMocks(
                 xmlLoader: xmlLoader);
 
             // Act & Assert
@@ -93,8 +89,7 @@ namespace VsDiffDuplicateHandler.Services
             IXmlLoader xmlLoader = Substitute.For<IXmlLoader>();
                 xmlLoader.Load(Arg.Any<string>()).Returns(xdoc);
 
-            XmlDuplicateReader uut = new XmlDuplicateReader(
-                config: Substitute.For<IDuplicateHandlerConfiguration>(),
+            XmlDuplicateReader uut = this.XmlDuplicateReaderWithDefaultMocks(
                 xmlLoader: xmlLoader);
             
             // Act
@@ -105,6 +100,16 @@ namespace VsDiffDuplicateHandler.Services
             // Assert
             Assert.Single(intersection);
             Assert.Empty(except);
+        }
+
+
+        private XmlDuplicateReader XmlDuplicateReaderWithDefaultMocks(
+            IDuplicateHandlerConfiguration config = null,
+            IXmlLoader xmlLoader = null)
+        {
+            return new XmlDuplicateReader(
+                config: config ?? Substitute.For<IDuplicateHandlerConfiguration>(),
+                xmlLoader: xmlLoader ?? Substitute.For<IXmlLoader>());
         }
 
 
