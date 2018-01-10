@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.IO;
@@ -13,31 +14,46 @@ namespace VsDiffDuplicateHandler
         static void Main(string[] args)
         {
             IServiceCollection services = new ServiceCollection();
-            services.AddSingleton<IDuplicateHandlerConfiguration>(AssertValidArguments(args));
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder
+                    .AddConsole()
+                    .AddDebug();
+            });
+            services.AddSingleton<IDuplicateHandlerConfiguration>(isp =>
+            {
+                ILogger<Program> logger = isp.GetRequiredService<ILogger<Program>>();
+                DuplicateHandlerConfiguration config = AssertValidArguments(args, logger);
+                return config;
+            });
             services.AddSingleton<IDuplicateReaderFactory, DuplicateReaderFactory>();
             services.AddSingleton<IXmlLoader, XmlLoader>();
             services.AddSingleton<IDuplicateReader, XmlDuplicateReader>();
             services.AddSingleton<IDuplicateReader, CsvDuplicateReader>();
             services.AddSingleton<System.IO.Abstractions.IFileSystem, System.IO.Abstractions.FileSystem>();
             services.AddSingleton<IDuplicateProcessor, DuplicateProcessor>();
+            services.AddSingleton<DryRunFileModifier>();
+            services.AddSingleton<FileModifier>();
             services.AddSingleton<IFileModifier>(isp =>
             {
                 IDuplicateHandlerConfiguration config = isp.GetRequiredService<IDuplicateHandlerConfiguration>();
                 if (config.DryRun)
-                    return new DryRunFileModifier();
+                    return isp.GetRequiredService<DryRunFileModifier>();
                 else
-                    return new FileModifier();
+                    return isp.GetRequiredService<FileModifier>();
             });
 
             IServiceProvider sp = services.BuildServiceProvider();
             IDuplicateProcessor dupProc = sp.GetRequiredService<IDuplicateProcessor>();
 
             dupProc.ProcessDuplicates();
+
+            return;
         }
 
 
         #region File Operations
-        
+
         private static void DeleteFile(string file)
         {
             try
@@ -67,20 +83,19 @@ namespace VsDiffDuplicateHandler
 
             Console.WriteLine($"MOVED {file} to {Path.GetDirectoryName(dest)}");
         }
-        
+
         #endregion
 
-        private static IDuplicateHandlerConfiguration AssertValidArguments(string[] args)
+        private static DuplicateHandlerConfiguration AssertValidArguments(string[] args, ILogger<Program> logger)
         {
             if (args.Length < 2)
             {
-                // TODO: Abstract logging
-                Console.WriteLine("Expected a \"duplicates\" file and \"good\" base path.");
+                logger.LogError("Expected a \"duplicates\" file and \"good\" base path.");
                 throw new ArgumentException();
             }
 
-            bool dryrun = 
-                args.Length == 3 && 
+            bool dryrun =
+                args.Length == 3 &&
                 args[2].Equals("--dryrun", StringComparison.OrdinalIgnoreCase);
 
             return new DuplicateHandlerConfiguration()
