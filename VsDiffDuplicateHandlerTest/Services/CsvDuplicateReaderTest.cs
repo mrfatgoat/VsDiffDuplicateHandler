@@ -109,9 +109,11 @@ namespace VsDiffDuplicateHandlerTest.Services
             // Act
             DuplicateGroup group = uut.Single();
             IEnumerable<GroupFile> intersection = group.Files.Intersect(group.Files);
+            IEnumerable<GroupFile> except = group.Files.Except(group.Files);
 
             // Assert
             Assert.Single(intersection);
+            Assert.Empty(except);
         }
 
 
