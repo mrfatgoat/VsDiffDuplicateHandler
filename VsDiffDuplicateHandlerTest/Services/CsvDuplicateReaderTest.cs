@@ -41,6 +41,9 @@ namespace VsDiffDuplicateHandlerTest.Services
             IFileSystem fs = this.ArrangeFileSystemForCsvData(
                 new CsvDuplicateRecord() { Group = 1, FileName = "", Checked = 0 },
                 new CsvDuplicateRecord() { Group = 2, FileName = "", Checked = 0 },
+                new CsvDuplicateRecord() { Group = 2, FileName = "", Checked = 0 },
+                new CsvDuplicateRecord() { Group = 3, FileName = "", Checked = 0 },
+                new CsvDuplicateRecord() { Group = 3, FileName = "", Checked = 0 },
                 new CsvDuplicateRecord() { Group = 3, FileName = "", Checked = 0 });
             
             CsvDuplicateReader uut = new CsvDuplicateReader(

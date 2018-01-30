@@ -12,6 +12,13 @@ namespace VsDiffDuplicateHandler
     {
         static void Main(string[] args)
         {
+            IDuplicateHandlerApp app = CreateApp(args);
+            app.Run();
+        }
+
+
+        private static IDuplicateHandlerApp CreateApp(string[] args)
+        {
             IServiceProvider serviceProvider = new ServiceCollection()
                 .AddLogging(loggingBuilder =>
                 {
@@ -25,6 +32,7 @@ namespace VsDiffDuplicateHandler
                     DuplicateHandlerConfiguration config = AssertValidArguments(args, logger);
                     return config;
                 })
+                .AddSingleton<IDuplicateHandlerApp, DuplicateHandlerApp>()
                 .AddSingleton<IDuplicateReaderFactory, DuplicateReaderFactory>()
                 .AddSingleton<IFileOperationsAbstraction, FileOperationsImplementation>()
                 .AddSingleton<IDuplicateReader, XmlDuplicateReader>()
@@ -43,10 +51,7 @@ namespace VsDiffDuplicateHandler
                 })
                 .BuildServiceProvider();
 
-            IDuplicateProcessor dupProc = serviceProvider.GetRequiredService<IDuplicateProcessor>();
-            dupProc.ProcessDuplicates();
-
-            return;
+            return serviceProvider.GetRequiredService<IDuplicateHandlerApp>();
         }
 
 
