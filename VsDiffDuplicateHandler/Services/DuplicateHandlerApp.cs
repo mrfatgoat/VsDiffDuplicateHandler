@@ -23,6 +23,10 @@ namespace VsDiffDuplicateHandler.Services
 
         public void Run()
         {
+            // TODO: If anything fails, don't delete the dupe file.
+            //       Provide a means of resuming???
+
+
             // Process duplicates
             _duplicateProcessor.ProcessDuplicates();
 
