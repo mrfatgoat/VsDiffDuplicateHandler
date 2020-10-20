@@ -124,7 +124,7 @@ namespace VsDiffDuplicateHandler.Services
 
         private XElement ArrangeGroup(params XElement[] images)
         {
-            return new XElement("Group", images);
+            return new XElement("G", images);
         }
     }
 }
