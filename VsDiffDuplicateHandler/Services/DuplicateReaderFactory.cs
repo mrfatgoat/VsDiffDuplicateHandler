@@ -27,7 +27,7 @@ namespace VsDiffDuplicateHandler.Services
 
         public IDuplicateReader CreateReader()
         {
-            FileInfoBase dupFileInfo = _fileSystem.FileInfo.FromFileName(_config.DuplicateFilePath);
+            IFileInfo dupFileInfo = _fileSystem.FileInfo.FromFileName(_config.DuplicateFilePath);
             IDuplicateReader correctReader = _readers.SingleOrDefault(r => r.CanHandle(dupFileInfo));
             return correctReader ?? throw new ArgumentException($"Could not find a compatible reader for \"{dupFileInfo.FullName}\".");
         }

@@ -24,7 +24,7 @@ namespace VsDiffDuplicateHandler.Services
         }
 
 
-        public bool CanHandle(FileInfoBase fileInfo) => fileInfo.Extension.Equals(".csv", StringComparison.CurrentCultureIgnoreCase);
+        public bool CanHandle(IFileInfo fileInfo) => fileInfo.Extension.Equals(".csv", StringComparison.CurrentCultureIgnoreCase);
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 

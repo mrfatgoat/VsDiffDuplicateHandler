@@ -6,6 +6,6 @@ namespace VsDiffDuplicateHandler.Services.Interfaces
 {
     public interface IDuplicateReader : IEnumerable<DuplicateGroup>
     {
-        bool CanHandle(FileInfoBase fileInfo);
+        bool CanHandle(IFileInfo fileInfo);
     }
 }

@@ -22,7 +22,7 @@ namespace VsDiffDuplicateHandler.Services
         }
 
 
-        public bool CanHandle(FileInfoBase fileInfo) => fileInfo.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase);
+        public bool CanHandle(IFileInfo fileInfo) => fileInfo.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase);
 
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
