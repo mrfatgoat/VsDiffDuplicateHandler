@@ -24,6 +24,7 @@ namespace VsDiffDuplicateHandler.Services
 
         public bool CanHandle(FileInfoBase fileInfo) => fileInfo.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase);
 
+
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
 
@@ -32,7 +33,7 @@ namespace VsDiffDuplicateHandler.Services
             XDocument xdoc = _fileOps.LoadXml(_config.DuplicateFilePath);
 
             // Get all the duplicate groups
-            IEnumerable<XElement> xmlGroups = xdoc.Descendants("Group");
+            IEnumerable<XElement> xmlGroups = xdoc.Descendants("G");
 
             // Convert each group to a model
             foreach (XElement xmlGroup in xmlGroups)

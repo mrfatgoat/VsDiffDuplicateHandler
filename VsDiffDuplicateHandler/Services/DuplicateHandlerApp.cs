@@ -8,11 +8,11 @@ namespace VsDiffDuplicateHandler.Services
         private readonly IDuplicateHandlerConfiguration _config;
         private readonly IDuplicateProcessor _duplicateProcessor;
         private readonly IFileOperationsAbstraction _fileOps;
-        
+
 
         public DuplicateHandlerApp(
-            IDuplicateHandlerConfiguration config, 
-            IDuplicateProcessor duplicateProcessor, 
+            IDuplicateHandlerConfiguration config,
+            IDuplicateProcessor duplicateProcessor,
             IFileOperationsAbstraction fileOps)
         {
             _config = config;
@@ -30,8 +30,11 @@ namespace VsDiffDuplicateHandler.Services
             // Process duplicates
             _duplicateProcessor.ProcessDuplicates();
 
-            // Delete the duplicates file
-            _fileOps.DeleteFile(_config.DuplicateFilePath);
+            if (!_config.DryRun)
+            {
+                // Delete the duplicates file
+                _fileOps.DeleteFile(_config.DuplicateFilePath);
+            }
         }
     }
 }
